@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumni;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardAlumniController extends Controller
 {
@@ -14,8 +15,18 @@ class DashboardAlumniController extends Controller
      */
     public function index()
     {
+        return view('dashboard.home.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function alumni()
+    {
         $alumnis = Alumni::latest()->paginate(10);
-        return view('alumni.index', compact('alumnis'));
+        return view('dashboard.alumni.index', compact('alumnis'));
     }
 
     /**
@@ -25,7 +36,7 @@ class DashboardAlumniController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.alumni.create');
     }
 
     /**
@@ -36,7 +47,29 @@ class DashboardAlumniController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama' => 'required|max:128',
+            'nik' => 'required|max:16',
+            'jenis_kelamin' => 'required|max:64',
+            'alamat' => 'required|max:256',
+            'jurusan' => 'required|max:64',
+            'tahun_lulus' => 'required|max:4',
+            'no_telp' => 'required|max:32',
+            'sosmed' => 'required|max:64',
+            'status' => 'required|max:64',
+            'nama_industri' => 'required|max:256',
+            'foto' => 'required|file|max:4096',
+            'rating' => 'required|max:64',
+            'saran' => 'required|max:512'
+        ]);
+
+        if($request->file('upload_foto')) {
+            $validatedData['upload_foto'] = $request->file('upload_foto')->store('public/storage');
+        }
+
+        Alumni::create($validatedData);
+
+        return redirect('/dashboard/alumni');
     }
 
     /**
@@ -56,9 +89,11 @@ class DashboardAlumniController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Alumni $alumni)
     {
-        //
+        return view('dashboard.alumni.edit', [
+            'alumni' => $alumni
+        ]);
     }
 
     /**
@@ -70,7 +105,23 @@ class DashboardAlumniController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'nama' => 'required|max:128',
+            'nik' => 'required|max:16',
+            'jenis_kelamin' => 'required|max:64',
+            'alamat' => 'required|max:256',
+            'jurusan' => 'required|max:64',
+            'tahun_lulus' => 'required|max:4',
+            'no_telp' => 'required|max:32',
+            'sosmed' => 'required|max:64',
+            'status' => 'required|max:64',
+            'nama_industri' => 'required|max:256',
+            'foto' => 'required|file|max:4096',
+            'rating' => 'required|max:64',
+            'saran' => 'required|max:512'
+        ]);
+
+        
     }
 
     /**
@@ -81,6 +132,6 @@ class DashboardAlumniController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

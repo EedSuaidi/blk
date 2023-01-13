@@ -20,6 +20,8 @@ Route::get('/', function () {
 });
 
 Route::get('/alumni', [AlumniController::class, 'index']);
-// Route::get('/alumni/create', AlumniController::class);
+Route::get('/alumni/create', [AlumniController::class, 'create']);
+Route::post('/alumni', [AlumniController::class, 'store']);
 
-Route::resource('/dashboard/alumni', DashboardAlumniController::class);
+Route::get('/dashboard/alumni', [DashboardAlumniController::class, 'alumni']);
+Route::resource('/dashboard', DashboardAlumniController::class);

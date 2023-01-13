@@ -21,17 +21,27 @@ class AlumniController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama_alumni' => 'required|max:50',
-            'nik' => 'required|integer|max:16',
-            'jenis_kelamin' => 'required|max:20',
-            'alamat' => 'required|max:128',
-            'jusuran' => 'required|max:50',
-            'tahun_lulus' => 'required|integer|max:4',
-            'no_telp' => 'required|max:20',
-            'sosmed' => 'required|max:50',
-            'keg_set_lulus' => 'required|max:50',
-            'nama_industry' => 'required|max:256',
-            'upload_foto' => 'required|'
+            'nama' => 'required|max:128',
+            'nik' => 'required|max:16',
+            'jenis_kelamin' => 'required|max:64',
+            'alamat' => 'required|max:256',
+            'jurusan' => 'required|max:64',
+            'tahun_lulus' => 'required|max:4',
+            'no_telp' => 'required|max:32',
+            'sosmed' => 'required|max:64',
+            'status' => 'required|max:64',
+            'nama_industri' => 'required|max:256',
+            'foto' => 'required|file|max:4096',
+            'rating' => 'required|max:64',
+            'saran' => 'required|max:512'
         ]);
+
+        if($request->file('upload_foto')) {
+            $validatedData['upload_foto'] = $request->file('upload_foto')->store('public/storage');
+        }
+
+        Alumni::create($validatedData);
+
+        return redirect('/alumni');
     }
 }
